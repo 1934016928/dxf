@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        long time = System.currentTimeMillis();
         PrintWriter writer = new PrintWriter(new FileWriter(new File("/home/var_rain/files/dxf.json")));
         String dxf = "/home/var_rain/files/libdxfrw/dwg2dxf/test.dxf";
 //        String dxf = "/home/var_rain/files/news.dxf";
@@ -23,5 +24,6 @@ public class Main {
         writer.write(json.toJson(document));
         writer.flush();
         writer.close();
+        System.out.println("Options was ok. use time: " + (System.currentTimeMillis() - time) + "ms");
     }
 }

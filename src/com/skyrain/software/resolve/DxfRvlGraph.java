@@ -2,10 +2,8 @@ package com.skyrain.software.resolve;
 
 import com.skyrain.software.dxf.beans.DxfAttribute;
 import com.skyrain.software.dxf.beans.DxfBlockEntity;
-import com.skyrain.software.dxf.entities.DxfBlock;
-import com.skyrain.software.dxf.entities.DxfEntity;
-import com.skyrain.software.dxf.entities.DxfLine;
-import com.skyrain.software.dxf.entities.DxfPoint;
+import com.skyrain.software.dxf.entities.*;
+import com.skyrain.software.enums.DxfGraph;
 import com.skyrain.software.enums.DxfTags;
 
 import java.util.ArrayList;
@@ -100,14 +98,69 @@ public class DxfRvlGraph {
     }
 
     private DxfEntity rvlEntity(List<DxfAttribute> dxf) {
-        DxfEntity entity;
-
+        DxfAttribute attribute = dxf.get(0);
+        if (attribute.getGroupCode() == 0) {
+            if (attribute.getGroupValue().equals(DxfGraph.LINE.name())) {
+                return rvlLine(dxf);
+            } else if (attribute.getGroupValue().equals(DxfGraph.LWPOLYLINE.name())) {
+                return rvlLwpolyLine(dxf);
+            }
+        }
         return null;
     }
 
-    private DxfLine rvlLine(List<DxfAttribute> dxf) {
+    private DxfLwpolyLine rvlLwpolyLine(List<DxfAttribute> dxf) {
+        DxfLwpolyLine line = new DxfLwpolyLine();
 
-        return null;
+        return line;
+    }
+
+    /**
+     * Resolve dxf lines.
+     *
+     * @param dxf dxf object list.
+     * @return return DxfLIne object.
+     */
+    private DxfLine rvlLine(List<DxfAttribute> dxf) {
+        DxfLine line = new DxfLine();
+        DxfPoint start = new DxfPoint();
+        DxfPoint end = new DxfPoint();
+        for (DxfAttribute attribute : dxf) {
+            if (attribute.getGroupCode() == 5) {
+                line.setEntHandle(attribute.getGroupValue());
+            } else if (attribute.getGroupCode() == 330) {
+                line.setSoftPon(attribute.getGroupValue());
+            } else if (attribute.getGroupCode() == 100) {
+                if (line.getSubClass() == null || line.getSubClass().equals("")) {
+                    line.setSubClass(attribute.getGroupValue());
+                } else {
+                    line.setSubType(attribute.getGroupValue());
+                }
+            } else if (attribute.getGroupCode() == 8) {
+                line.setLayerName(attribute.getGroupValue());
+            } else if (attribute.getGroupCode() == 6) {
+                line.setLineType(attribute.getGroupValue());
+            } else if (attribute.getGroupCode() == 62) {
+                line.setColorNum(Integer.parseInt(attribute.getGroupValue().replaceAll(" ", "")));
+            } else if (attribute.getGroupCode() == 370) {
+                line.setLineWidth(attribute.getGroupValue());
+            } else if (attribute.getGroupCode() == 10) {
+                start.setX(Double.parseDouble(attribute.getGroupValue()));
+            } else if (attribute.getGroupCode() == 20) {
+                start.setY(Double.parseDouble(attribute.getGroupValue()));
+            } else if (attribute.getGroupCode() == 30) {
+                start.setY(Double.parseDouble(attribute.getGroupValue()));
+            } else if (attribute.getGroupCode() == 11) {
+                end.setX(Double.parseDouble(attribute.getGroupValue()));
+            } else if (attribute.getGroupCode() == 21) {
+                end.setY(Double.parseDouble(attribute.getGroupValue()));
+            } else if (attribute.getGroupCode() == 31) {
+                end.setZ(Double.parseDouble(attribute.getGroupValue()));
+            }
+        }
+        line.setStart(start);
+        line.setEnd(end);
+        return line;
     }
 
     /**
