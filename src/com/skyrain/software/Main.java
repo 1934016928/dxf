@@ -15,7 +15,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         long time = System.currentTimeMillis();
         PrintWriter writer = new PrintWriter(new FileWriter(new File("/home/var_rain/files/dxf.json")));
-        String dxf = "/home/var_rain/files/libdxfrw/dwg2dxf/test.dxf";
+//        String dxf = "/home/var_rain/files/libdxfrw/dwg2dxf/test.dxf";
+        String dxf = "/home/var_rain/Java/dxf/assets/news.dxf";
 //        String dxf = "/home/var_rain/files/news.dxf";
         DxfRvlFile reso = new DxfRvlFile();
         DxfDocument document = reso.resolve(dxf);
